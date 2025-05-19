@@ -16,7 +16,6 @@ The implementation relies on **Pennylane**, a quantum computing framework that f
 - Quantum phase estimation to infer ground state energy
 - Support for multiple spatial resolutions (`d = 2, 3, 4, 5`)
 
-
 ## Requirements
 
 - Python ≥ 3.8  
@@ -50,7 +49,6 @@ Fillion-Gourdeau, F., MacLean, S., & Laflamme, R. (2017).
 Physical Review A, 95(4), 042343.  
 [DOI: 10.1103/PhysRevA.95.042343](http://dx.doi.org/10.1103/PhysRevA.95.042343)
 
-
 ## Acknowledgments
 
-Special thanks to the supervisor Dr. Ezequiel Valero Lafuente for his guidance throughout the project.
+Special thanks to the supervisor Ezequiel Valero Lafuente for his guidance throughout the project.
