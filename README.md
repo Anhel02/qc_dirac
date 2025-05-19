@@ -21,7 +21,6 @@ The implementation relies on **Pennylane**, a quantum computing framework that f
 - Python ≥ 3.8  
 - Pennylane  
 - NumPy  
-- Matplotlib *(optional, for visualizations)*
 - **(Optional for GPU acceleration)**:
   - `jax`, `jaxlib` (with CUDA support)
   - `pennylane-lightning[gpu]`
