@@ -1,11 +1,32 @@
+# =============================================================
+# Quantum Simulation of the Dirac Equation
+# -------------------------------------------------------------
+# Author: Ángel Gómez González
+# Institution: Universidad Europea de Valencia
+# Project: Bachelor's Thesis in Physics
+# Academic Year: 2024–2025
+# Supervisor: Ezequiel Valero Lafuente
+#
+# Description:
+# This script simulates the time evolution governed by the Dirac
+# equation using quantum computing techniques. It estimates the
+# ground state energy of the hydrogen atom by encoding the Dirac
+# Hamiltonian in a quantum circuit implemented with Pennylane.
+#
+# Reference:
+# Fillion-Gourdeau, F., MacLean, S., & Laflamme, R. (2017).
+# "Algorithm for the solution of the Dirac equation on digital
+# quantum computers", Phys. Rev. A 95, 042343.
+# DOI: https://doi.org/10.1103/PhysRevA.95.042343
+# =============================================================
+
 import numpy as np
-import matplotlib.pyplot as plt
 import pennylane as qml
 from pennylane import numpy as pnp
 
 def evolution(d, steps):
 
-    ##### Parámetros Iniciales #####
+    ##### Initial Parameters #####
     N=2**d
     L=10
     eps=1e-6
@@ -15,7 +36,7 @@ def evolution(d, steps):
 
     wires = list(range(3 * d + 2))
     dev = qml.device('lightning.qubit', wires=wires)
-    # Si se cuenta con GPU >= SM 7.0 (Volta) + Cuda 12.9 + Jax  :
+    # If GPU >= SM 7.0 (Volta) + Cuda 12.9 + Jax  :
     # dev = qml.device('lightning.gpu', wires=wires)
 
     ##### Estado 1s #####
@@ -33,33 +54,33 @@ def evolution(d, steps):
         psi /= np.sqrt(norm_sq)
         return psi.flatten()
 
-    ##### Operadores #####
+    ##### Operators #####
 
     def QV(dt, L, eps, wires, dims=3):
         n = len(wires)
-        bits_per_dim = n // dims # qubits por eje
-        N = 2 ** bits_per_dim # puntos por eje
-        total = N ** dims # puntos totales
-        l = 2 * L / (N - 1) # paso
+        bits_per_dim = n // dims
+        N = 2 ** bits_per_dim
+        total = N ** dims
+        l = 2 * L / (N - 1)
         diag = np.zeros(total, dtype=complex)
 
         for idx in range(total):
             coords = []
             tmp = idx
-            for _ in range(dims): # idx->bit
+            for _ in range(dims):
                 digit = tmp % N
                 coords.append(digit)
                 tmp //= N
 
             r_squared = 0
             for digit in coords:
-                x = (digit - (N - 1) / 2) * l # bit->coord
-                r_squared += x**2 # x**2+y**2+z**2
+                x = (digit - (N - 1) / 2) * l
+                r_squared += x**2
 
-            V_val = -1.0 / np.sqrt(r_squared + eps) # potencial
-            diag[idx] = np.exp(-1j * V_val * dt) # diagonal de la matriz
+            V_val = -1.0 / np.sqrt(r_squared + eps)
+            diag[idx] = np.exp(-1j * V_val * dt)
 
-        U = np.diag(diag) # matriz final
+        U = np.diag(diag)
         return qml.QubitUnitary(U, wires=wires)
 
 
@@ -108,10 +129,10 @@ def evolution(d, steps):
                 qml.MultiControlledX(wires=ctrl + [target_wires[i]])
         qml.X(wires=ctrl_wire)
 
-    ##### Circuito de Dirac #####
+    ##### Dirac Circuit #####
 
     @qml.qnode(dev)
-    # Si se emplea 'lightning.gpu':
+    # If 'lightning.gpu':
     #@qml.qnode(dev, interface='jax')
     def qc():
         for _ in range(steps):
@@ -136,19 +157,19 @@ def evolution(d, steps):
         return qml.state()
 
 
-    ##### Inicialización #####
+    ##### Initialization #####
 
     @qml.qnode(dev)
-    # Si se emplea 'lightning.gpu':
+    # If 'lightning.gpu':
     #@qml.qnode(dev, interface='jax')
     def prepare_initial_state():
-        qml.BasisState(pnp.array([0, 0]), wires=[0, 1]) # Spinor : |00>
-        psi = hydrogen_1s_state_vector(N, eps, N=2**d,) # Psi en la malla
-        qml.StatePrep(psi, wires=range(2, 2 + 3 * d)) # Psi en |i,j,k>
+        qml.BasisState(pnp.array([0, 0]), wires=[0, 1])
+        psi = hydrogen_1s_state_vector(N, eps, N=2**d,)
+        qml.StatePrep(psi, wires=range(2, 2 + 3 * d))
         return qml.state()
 
 
-    ##### Medición de Energía #####
+    ##### Energy Estimation #####
 
     T = steps * dt
     psi0 = prepare_initial_state()
@@ -161,7 +182,7 @@ def evolution(d, steps):
 
 if __name__ == '__main__':
 
-    ##### Obtención de Datos #####
+    ##### Get Data #####
 
     for d in [2,3,4,5]:
         filename = f'd_{d}.txt'
