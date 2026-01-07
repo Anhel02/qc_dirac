@@ -4,9 +4,17 @@ This repository contains Python code developed for a Final Degree Project in Phy
 
 ## Overview
 
-This project explores the use of quantum computing to simulate the Dirac equation, a cornerstone of relativistic quantum mechanics. The methodology involves encoding the Dirac Hamiltonian in a quantum circuit and estimating the ground state energy of the hydrogen atom using variational and time-evolution techniques.
+This repository implements a quantum-circuit model for simulating the Dirac equation and using it as a proof-of-concept to estimate the ground-state energy of the hydrogen atom.
 
-The implementation relies on **Pennylane**, a quantum computing framework that facilitates hybrid quantum-classical computation.
+The approach discretises space on a cubic lattice and factors the Dirac time-evolution into a product of unitary operators that can be compiled into a gate-based circuit. In particular, the algorithm combines:
+
+- **Lie–Trotter (Trotter–Suzuki) decomposition** to approximate time evolution with non-commuting terms
+- **Operator splitting** to separate translation, mass and potential contributions
+- A **quantum walk** construction for the conditional translation step
+
+As an application, the circuit is initialised in a discretised hydrogen 1s orbital and evolved for a total time. Assuming the initial wavefunction is an eigenstate, the energy is extracted from the global phase.
+
+Implementation is written in Python using PennyLane.
 
 ## Features
 
@@ -15,6 +23,7 @@ The implementation relies on **Pennylane**, a quantum computing framework that f
 - Implementation of custom potential, mass, and translation operators
 - Quantum phase estimation to infer ground state energy
 - Support for multiple spatial resolutions (`d = 2, 3, 4, 5`)
+- GPU acceleration.
 
 ## Requirements
 
