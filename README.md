@@ -1,6 +1,6 @@
 # Quantum Simulation of the Dirac Equation
 
-This repository contains Python code developed for a Final Degree Project in Physics on the Universidad Europea de Valencia, focused on simulating the Dirac equation using quantum computing techniques. The simulation estimates the ground state energy of the hydrogen atom via a parametrization of the Dirac Hamiltonian implemented on a quantum circuit.
+This repository contains Python code developed for a Bachelor's Thesis in Physics on the Universidad Europea de Valencia, focused on simulating the Dirac equation using quantum computing techniques. The simulation estimates the ground state energy of the hydrogen atom via a parametrization of the Dirac Hamiltonian implemented on a quantum circuit.
 
 ## Overview
 
